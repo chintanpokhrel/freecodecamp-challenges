@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<title>Simon Game</title>
+		<meta charset=UTF-8></meta>
+		<link rel=stylesheet type=text/css href=game.css>
+		<link href=https://fonts.googleapis.com/css?family=Orbitron rel=stylesheet type=text/css> 
+	</head>
+	<body>
+	
+	<div class=container>
+
+		<div class=switch-panel>
+			<div class=on-off>
+				<label class="switch">
+					<input type="checkbox" id=btnOnOff autocomplete=off>
+					<span class="slider round"></span>
+				</label>
+			</div>
+
+			<div class=start id=divStart>
+				<input type=button class="fa fa-undo" id=btnStart ></input>
+			</div>
+
+			<div class=steps>
+				<label class="cur-steps" id=cur-steps>
+					0		
+				</label>
+			</div>
+
+		</div>
+		
+		<div class=button-grid-wrapper>
+			<div id=button-grid>
+				<div id=button-grid-row-1>
+					<div class=btn-cont>
+						<div id=blue></div>
+					</div>
+					<div class=btn-cont>
+						<div id=green></div>
+					</div>
+				</div>
+				<div id=button-grid-row-2>
+					<div class=btn-cont>
+						<div id=yellow></div>
+					</div>
+					<div class=btn-cont>
+						<div id=red></div>
+					</div>
+				</div>	
+			</div>
+		</div>
+	</div>
+	<script src=../timeout-queue/timeoutqueue.js type=text/javascript></script>
+	<script src=game.js type=text/javascript></script>
+
+	<!--script src=game_test.js type=text/javascript></script-->	
+	</body>
+</html>
