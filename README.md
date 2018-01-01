@@ -1,2 +1,2 @@
 # freecodecamp-challenges
-Simon game challenge from free code camp
+Code challenges from free code camp
