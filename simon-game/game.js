@@ -1,19 +1,5 @@
 var TEST=false;
 
-var Colors = {
-	BLUE: 1,
-	GREEN: 2,
-	YELLOW: 3,
-	RED: 4,
-	properties: {
-		1: { name: "BLUE" },
-		2: { name: "GREEN"  },
-		3: { name: "YELLOW" },
-		4: { name: "RED" }
-	}
-};
-
-
 var Player = function(){
 	this.game = new Game();
 	
@@ -27,7 +13,7 @@ var Player = function(){
 		that.game.pressButton(color);
 	}	
 
-	this.strictBtnPress = function(){
+	this.strictBtnPress = function(strict_flag){
 		that.game.start("strict");
 	}
 
@@ -52,11 +38,17 @@ var Game = function(){
 	var that = this;	
 	
 	var on = false;
+	var strict = false;
 	
 	this.start = function(start_mode="default"){
 		if(!on){
 			return;
 		}
+
+		if(start_mode == "strict"){
+			strict = true;
+		}
+
 		that.steps = [];
 		that.cur = 0;
 		nextLevel();
@@ -95,7 +87,14 @@ var Game = function(){
 			updateCurSteps("!!");
 			timeoutqueue.empty();	
 			glowStep(color_code, true); //request some extra delay step
-			glowSteps();
+			
+			if(strict){
+				that.start();
+			
+			}else{
+
+				glowSteps();
+			}
 		}	
 	}
 
@@ -218,7 +217,8 @@ function attachHandlers(){
 	var player = new Player();
 	var start_btn = document.getElementById("btnStart");
 	var onoff_btn = document.getElementById("btnOnOff");
-
+	var strict_btn =document.getElementById("btnStrict");
+	
 	var color1_btn= document.getElementById("blue");
 	var color2_btn= document.getElementById("green");
 	var color3_btn= document.getElementById("yellow");
@@ -227,6 +227,10 @@ function attachHandlers(){
 	start_btn.addEventListener("click", player.startBtnPress);
 	onoff_btn.addEventListener("click", function(){
 		player.onOffBtnPress(this.checked);
+	});
+	
+	strict_btn.addEventListener("click", function(){
+		player.strictBtnPress(this.checked);
 	});
 	
 	color1_btn.addEventListener("click", function(){
