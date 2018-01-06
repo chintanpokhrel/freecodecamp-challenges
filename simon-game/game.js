@@ -83,18 +83,18 @@ var Game = function(){
 	
 		if(checkStep(color_code)){
 			//correct press
-			glowStep(color_code);
+			glowImmediate(color_code);
 			if(that.cur >= that.max_steps){
 				//win
 			}else if(that.cur >= (that.steps.length-1)){
+				addDelay();
 				nextLevel();
 			}else{
 				nextStep();
 			}
 		}else{
 			updateCurSteps("!!");
-			timeoutqueue.empty();	
-			glowStep(color_code, true); //request some extra delay step
+			glowImmediateExtraDelay(color_code); //request some extra delay step
 			glowSteps();
 		}	
 	}
@@ -113,12 +113,30 @@ var Game = function(){
 	var glowSteps = function(){
 		that.cur = 0;	
 		for(var i=0; i<that.steps.length; ++i){
-			glowStep(that.steps[i]);	
+			glowQueued(that.steps[i]);	
 		}
 	}
 
-	//glow and play audio
-	var glowStep = function(color_code, with_extra_delay=false){
+
+	var glowImmediate = function(color_code){
+		var btn_id = getBtnId(color_code);
+		glow(btn_id);
+		playAudio(btn_id);
+	}
+
+	var glowImmediateExtraDelay = function(color_code){
+		glowImmediate(color_code);
+		addDelay();
+	}
+
+	var addDelay = function(){
+		timeoutqueue.enqueue({callback: function(arg){
+			return;
+		}, context: ""});
+
+	}
+
+	var glowQueued = function(color_code){
 		var _btn_id = getBtnId(color_code);
 		
 		timeoutqueue.enqueue({callback: function(args){
@@ -126,14 +144,13 @@ var Game = function(){
 			playAudio(args.btn_id);
 			updateCurSteps(that.steps.length);
 		}, context: {btn_id: _btn_id}});
-
-		if(with_extra_delay){//for some more delay, dummy func call
-			timeoutqueue.enqueueBeg({callback: function(arg){
-				return;
-			}, context: ""}); 	
-		}
-
 	}
+
+	var glowQueuedExtraDelay = function(){
+		glowQueued(color_code);
+		addDelay();
+	}
+
 
 	var checkStep = function(color_code){	
 		if (that.steps[that.cur] == color_code){
