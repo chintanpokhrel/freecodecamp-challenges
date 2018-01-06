@@ -14,7 +14,8 @@ var Player = function(){
 	}	
 
 	this.strictBtnPress = function(strict_flag){
-		that.game.start("strict");
+		//that.game.start("strict");
+		that.game.setStrict(strict_flag);
 	}
 
 	this.onOffBtnPress = function(on_flag){
@@ -40,22 +41,18 @@ var Game = function(){
 	var on = false;
 	var strict = false;
 	
-	this.start = function(start_mode="default"){
+	this.start = function(){
 		if(!on){
 			return;
 		}
-
-		if(start_mode == "strict"){
-			strict = true;
-		}
-
-		addDelay();
-
 		that.steps = [];
 		that.cur = 0;
+		addDelay();
 		nextLevel();
 		
 	}
+
+	this.restart = this.start;
 
 	this.switchOff = function(){
 		on = false;
@@ -64,6 +61,13 @@ var Game = function(){
 
 	this.switchOn = function(){
 		on = true;
+	}
+
+	this.setStrict = function(is_strict){
+		strict = is_strict;
+		that.steps = [];
+		that.cur = 0;
+		updateCurSteps(0);
 	}
 	
 	this.pressButton = function(color_code){
@@ -79,7 +83,9 @@ var Game = function(){
 		if(checkStep(color_code)){
 			//correct press
 			glowImmediate(color_code);
-			if(that.cur >= that.max_steps){
+
+			if((that.cur+1) >= that.max_steps ){
+				glowAll();
 				//win
 			}else if(that.cur >= (that.steps.length-1)){
 				addDelay();
@@ -90,15 +96,20 @@ var Game = function(){
 		}else{
 			updateCurSteps("!!");
 			glowImmediateExtraDelay(color_code); 
-			
+			//updateCurSteps(0);
 			if(strict){
-				that.start("strict");
+				that.restart();
 			}else{
 
 				glowSteps();
 			}
 
 		}	
+	}
+
+	var reset = function(){
+		that.steps = [];
+		that.cur = 0;
 	}
 
 	var nextLevel = function(){
@@ -183,7 +194,6 @@ function getBtnId(color_code){
 	case 4:
 		return "red";
 	}
-	//return "btnColor"+color_code;
 }
 
 var audios = {
@@ -231,6 +241,46 @@ function updateCurSteps(cur_steps){
 	cur_steps_label.innerHTML = cur_steps;
 }
 
+function glowAll(times=5){
+	timeoutqueue.empty();
+	var btn_ids = [ "blue", "green", "yellow", "red"];
+	var blue = document.getElementById("blue");
+	var green = document.getElementById("green");
+	var yellow = document.getElementById("yellow");
+	var red = document.getElementById("red");	
+		
+	var win_panel = document.getElementById("win-panel");
+	var switch_panel = document.getElementById("switch-panel");
+
+	win_panel.classList.remove("hide");
+	switch_panel.classList.add("hide");
+	
+	function func(){
+		blue.classList.add(getGlowClass("blue"));
+		green.classList.add(getGlowClass("green"));
+		yellow.classList.add(getGlowClass("yellow"));
+		red.classList.add(getGlowClass("red"));
+
+		
+		timeoutqueue.enqueueBeg({callback: function(){
+			blue.classList.remove(getGlowClass("blue"));
+			green.classList.remove(getGlowClass("green"));
+			yellow.classList.remove(getGlowClass("yellow"));
+			red.classList.remove(getGlowClass("red"));
+		}, context: ""});
+	}
+
+	for(var i = 0; i < times; ++i){
+		timeoutqueue.enqueue({callback: func, context: ""});
+	}
+
+	timeoutqueue.enqueue({callback: function(){
+		win_panel.classList.add("hide");
+		switch_panel.classList.remove("hide");
+	}, context: ""});
+	
+}
+
 function attachHandlers(){
 	var player = new Player();
 	var start_btn = document.getElementById("btnStart");
@@ -244,10 +294,20 @@ function attachHandlers(){
 	start_btn.addEventListener("click", player.startBtnPress);
 	onoff_btn.addEventListener("click", function(){
 		player.onOffBtnPress(this.checked);
+		if(this.checked){
+			document.getElementById("lblOnOff").innerHTML = "On";
+		}else{
+			document.getElementById("lblOnOff").innerHTML = "Off";
+		}
 	});
 	
 	strict_btn.addEventListener("click", function(){
 		player.strictBtnPress(this.checked);
+		if(this.checked){
+			document.getElementById("lblStrict").innerHTML = "Strict On";
+		}else{
+			document.getElementById("lblStrict").innerHTML = "Strict Off";
+		}
 	});
 	
 	color1_btn.addEventListener("click", function(){
@@ -270,4 +330,4 @@ function attachHandlers(){
 }
 
 attachHandlers();
-
+//glowAll();

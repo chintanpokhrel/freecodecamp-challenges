@@ -10,53 +10,26 @@
 	
 	<div class=container>
 
-		<!--div class=switch-panel>
-			
-			<div class=on-off id=btn-bg>
-				<div id=btn-hilight></div>
-				<div id=btn-ring>
-					<div id="ring-line"></div>
-				</div>
-				
-			</div>
-
-			<div class=strict>
-				<label class=switch>
-					<input type=checkbox id=btnStrict autocomplete=off>
-					<span class="slider round"></span>
-				</label>
-			</div>
-
-			<div class=start id=divStart>
-				<input type=button class="fa fa-undo" id=btnStart ></input>
-			</div>
-
-			<div class=steps>
-				<label class="cur-steps" id=cur-steps>
-					0		
-				</label>
-			</div>
-
-		</div-->
-
-		<div class=switch-panel>
+		<div class="hide win-panel" id=win-panel>
+			<label> You Win !! </label>
+		</div>
+		<div class=switch-panel id=switch-panel>
 			<div class=on-off>
 				<label class="switch">
   				<input type="checkbox" autocomplete=off id=btnOnOff>
   				<span class="slider round"></span>
 				</label>
-				<!--input type=checkbox unchecked autocomplete=off value=On/Off-->
+				<div id=lblOnOff class=btn-label>Off</div>
 			</div>
 			<div class=start>
 				<input type=button id=btnStart class=start-button value=Start>
 			</div>
 			<div class=strict>
-				<!--input type=checkbox checked=false autocomplete=off value=Strict-->
 				<label class="switch">
   				<input type="checkbox" id=btnStrict autocomplete=off>
   				<span class="slider round"></span>
 				</label>
-
+				<div id=lblStrict class=btn-label>Strict Off</div>
 			</div>
 			<div class=steps>
 				<label class="cur-steps" id=cur-steps>
@@ -87,15 +60,6 @@
 	</div>
 	<script src=../../timeout-queue/timeoutqueue.js type=text/javascript></script>
 	<script src=game.js type=text/javascript></script>
-
-	<script type=text/javascript>
-	/*	function handlePowerOn(){
-			document.getElementById("btnOnOff").classList.toggle("active");
-		}
-
-		document.getElementById("btnOnOff").addEventListener('click', handlePowerOn);
-*/
-	</script>
 	<!--script src=game_test.js type=text/javascript></script-->	
 	</body>
 </html>
