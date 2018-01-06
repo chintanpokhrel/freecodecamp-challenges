@@ -49,9 +49,12 @@ var Game = function(){
 			strict = true;
 		}
 
+		addDelay();
+
 		that.steps = [];
 		that.cur = 0;
 		nextLevel();
+		
 	}
 
 	this.switchOff = function(){
@@ -86,18 +89,14 @@ var Game = function(){
 			}
 		}else{
 			updateCurSteps("!!");
-			glowImmediateExtraDelay(color_code); //request some extra delay step
+			glowImmediateExtraDelay(color_code); 
 			
 			if(strict){
-				that.start();
+				that.start("strict");
 			}else{
 
 				glowSteps();
 			}
-
-			glowImmediateExtraDelay(color_code); //request some extra delay step
-			glowSteps();
-
 
 		}	
 	}
@@ -108,13 +107,14 @@ var Game = function(){
 		that.steps.push(next_color);
 		that.cur = 0
 		glowSteps();
-		updateCurSteps(that.steps.length);
+		//updateCurSteps(that.steps.length);
 		
 	}
 	
 
 	var glowSteps = function(){
 		that.cur = 0;	
+		//timeoutqueue.empty();
 		for(var i=0; i<that.steps.length; ++i){
 			glowQueued(that.steps[i]);	
 		}
@@ -211,9 +211,6 @@ function getGlowClass(color){
 }
 
 function glow(btn_id){
-	if(TEST){
-		console.log(btn_id);
-	}
 	var btn = document.getElementById(btn_id);
 	btn.classList.add(getGlowClass(btn_id));
 
