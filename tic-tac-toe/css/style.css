@@ -1,0 +1,92 @@
+.toggle-btn-div{
+  padding: 20px;
+  text-align: left;
+  margin-left: 1%;
+  margin-bottom: 5%;
+}
+.play-as{
+  font-size: larger;
+}
+.faces{
+  width: 400px;
+  padding-right: 0px;
+  margin:0 auto;
+  text-align: center;
+}
+
+.hide{
+  display: none;
+}
+
+.face{
+  display: inline-block;
+}
+
+.happy-face, .sad-face{
+  width: 150px;
+  height: 150px;
+  padding: 20px;
+}
+.board{
+  width: 400px;
+  height: 400px;
+  margin: 0 auto;
+  text-align: center;
+}
+
+.square{
+  border: solid;
+  width: 120px;
+  height: 120px;
+  line-height: 120px;
+  font-size: xx-large;
+}
+
+.square00{
+  border-top-style: none;
+  border-left-style: none;
+}
+
+.square01{
+  border-top-style: none;
+}
+
+.square02{
+  border-top-style: none;
+  border-right-style: none;
+}
+
+.square10{
+  border-left-style: none;
+}
+
+.square11{
+  
+}
+
+.square12{
+  border-right-style: none;
+}
+
+.square20{
+  border-left-style: none;
+  border-bottom-style: none;
+}
+
+.square21{
+  border-bottom-style: none;
+}
+
+.square22{
+  border-bottom-style: none;
+  border-right-style: none;
+}
+
+
+.win{
+  background: green;
+}
+
+.draw{
+  background: orange;
+}
