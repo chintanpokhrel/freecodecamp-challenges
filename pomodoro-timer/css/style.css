@@ -1,0 +1,17 @@
+body{
+  background: #333333;
+}
+.pad{
+  padding:20px;
+}
+.minus, .plus, .length{
+  font-size: x-large;
+  text-align: center;
+  color: white;
+}
+
+.canvas-div{
+  margin-left: auto;
+  margin-right: auto;
+  width: 50%;
+}
