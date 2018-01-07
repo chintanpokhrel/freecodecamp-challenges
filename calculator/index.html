@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en" >
+
+<head>
+  <meta charset="UTF-8">
+  <title>Calculator</title>
+  
+  
+  <link rel='stylesheet prefetch' href='http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css'>
+
+      <link rel="stylesheet" href="css/style.css">
+
+  
+</head>
+
+<body>
+
+  <div class="container-fluid outercontainer">
+  <br>
+  <div class="border">
+    <div class="text-center heading">
+      <span class=loosu>Simple
+      </span>
+      <br> Electronic Calculator
+    </div>
+    <div class="screen" id="screen">
+      <br>
+      <br>
+      <br>
+      <br>
+    </div>
+    <div class="container-fluid">
+      <!--create bootstrap rows for buttons-->
+      <div class="row pad" id="row1">
+        <div class="col-xs-3">
+          <div class="btn btn-default full ac" id="ac" onclick="ac()">
+            AC
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="btn btn-default full ce" id="ce" onclick="ce()">
+            CE
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="btn btn-default full" id="percent" onclick="percent()">
+            %
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="btn btn-default full" id="divide" onclick="divide()">
+            /
+          </div>
+        </div>
+      </div>
+      <div class="row pad" id="row2">
+        <div class="col-xs-3">
+          <div class="btn btn-default full" id="7" onclick="seven()">
+            7
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="btn btn-default full" id="8" onclick="eight()">
+            8
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="btn btn-default full" id="9" onclick="nine()">
+            9
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="btn btn-default full" id="x" onclick="multiply()">
+            x
+          </div>
+        </div>
+      </div>
+      <div class="row pad" id="row3">
+        <div class="col-xs-3">
+          <div class="btn btn-default full" id="4" onclick="four()">
+            4
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="btn btn-default full" id="5" onclick="five()">
+            5
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="btn btn-default full" id="6" onclick="six()">
+            6
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="btn btn-default full" id="minus" onclick="minus()">
+            -
+          </div>
+        </div>
+      </div>
+      <div class="row pad" id="row4">
+        <div class="col-xs-9">
+          <div class="row innerpad1">
+            <div class="col-xs-4">
+              <div class="btn btn-default full" id="1" onclick="one()">
+                1
+              </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="btn btn-default full" id="2" onclick="two()">
+                2
+              </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="btn btn-default full" id="3" onclick="three()">
+                3
+              </div>
+            </div>
+          </div>
+          <div class="row innerpad2">
+            <div class="col-xs-4">
+              <div class="btn btn-default full" id="0" onclick="zero()">
+                0
+              </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="btn btn-default full" id="dot" onclick="dot()">
+                .
+              </div>
+            </div>
+            <div class="col-xs-4">
+              <div class="btn btn-default full" id="equals" onclick="equals()">
+                =
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-xs-3">
+          <div class="btn btn-default full pluspad" id="plus" onclick="plus()">
+            <br>+<br><br>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  <script src='http://cdnjs.cloudflare.com/ajax/libs/jquery/2.1.3/jquery.min.js'></script>
+
+  
+
+    <script  src="js/index.js"></script>
+
+
+
+
+</body>
+
+</html>
