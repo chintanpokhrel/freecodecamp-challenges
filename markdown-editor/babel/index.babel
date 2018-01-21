@@ -1,0 +1,86 @@
+const app_class = {
+	border: "2px solid black",
+	minHeight: "90vh",
+	width: "100%",
+	maxHeight: "100vh",
+	overflow: "auto"
+};
+
+const editor_class = {
+	width: "45%",
+	maxWidth: "100vw",
+	minWidth: "300px",
+	minHeight: "70vh",
+	float: "left",
+	display: "flex",
+	clear: "both",
+	padding: "5px"
+};
+
+const textarea_class={
+     width: "100%",
+     WebkitBoxSizing: "border-box", /* Safari/Chrome, other WebKit */
+     MozBoxSizing: "border-box",    /* Firefox, other Gecko */
+     BoxSizing: "border-box"  ,
+	   flex: 1
+};
+
+const previewer_class = {
+	float: "left",
+	width: "45%",
+	minWidth: "300px",
+	padding: "5px",
+	display: "block"
+};
+
+
+class App extends React.Component{
+	constructor(props){
+		super(props);
+		this.state = {
+			inputText: ""
+		};
+		this.handleChange=this.handleChange.bind(this);
+	}
+	
+	handleChange(event){
+		this.setState({
+			inputText: event.target.value
+		});
+	}
+	
+	render(){
+		const markedText=marked(this.state.inputText);
+		
+		return (
+			<div style={app_class}>
+				<Editor handleChange={this.handleChange} />
+				<Previewer input={markedText} />
+		  </div>
+		);
+	}	
+};
+
+class Editor extends React.Component{
+	constructor(props){
+		super(props);
+	}
+	render(){
+		return (<div style={editor_class} ><textarea style={textarea_class} onChange={this.props.handleChange} /> </div>);
+	}
+};
+
+class Previewer extends React.Component{
+	constructor(props){
+		super(props);
+	}
+	render(){
+		return (
+			<div dangerouslySetInnerHTML={{__html: this.props.input}} style={previewer_class} />
+		);
+	}
+};
+
+ReactDOM.render(<App />, document.getElementById("app"));
+
+
