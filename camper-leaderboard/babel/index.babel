@@ -1,0 +1,171 @@
+function getData(callback) {
+  var xmlhttp = new XMLHttpRequest();
+  xmlhttp.onreadystatechange = function() {
+    if (this.readyState == 4 && this.status == 200) {
+      var data = JSON.parse(this.responseText);
+      callback(data);
+    } else if (this.readyState == 4) {
+      callback([]);
+    }
+  };
+  xmlhttp.open(
+    "GET",
+    "https://fcctop100.herokuapp.com/api/fccusers/top/recent",
+    true
+  );
+  xmlhttp.send();
+}
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    this.state = {
+      leaders: [],
+      sortedBy: ""
+    };
+    this.sortByLast30 = this.sortByLast30.bind(this);
+    this.sortByAllTime = this.sortByAllTime.bind(this);
+  }
+
+  sortByLast30() {
+    const sorted_leaders = this.state.leaders
+      .concat()
+      .sort((a, b) => b.recent - a.recent);
+    this.setState({
+      leaders: sorted_leaders,
+      sortedBy: "recent"
+    });
+  }
+
+  sortByAllTime() {
+    const sorted_leaders = this.state.leaders
+      .concat()
+      .sort((a, b) => b.alltime - a.alltime);
+    this.setState({
+      leaders: sorted_leaders,
+      sortedBy: "alltime"
+    });
+  }
+
+  componentWillMount() {
+    const that = this;
+    getData(function(data) {
+      that.setState({
+        leaders: data
+      });
+      that.sortByLast30();
+    });
+  }
+
+  render() {
+    return (
+      <table>
+        <Caption />
+        <Header
+          sortByLast30={this.sortByLast30}
+          sortByAllTime={this.sortByAllTime}
+          sortedBy={this.state.sortedBy}
+        />
+        <Board leaders={this.state.leaders} />
+      </table>
+    );
+  }
+}
+
+class Caption extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return <caption><i className="fa fa-free-code-camp" />Camper Leaderboard</caption>;
+  }
+}
+
+class Header extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+  
+  handleRecentSort(){
+    
+  }
+  
+  handleAllTimeSort(){
+    
+  }
+  
+  render() {
+    const sort_class="fa fa-sort-desc";
+    let recent_class="";
+    let alltime_class="";
+    if(this.props.sortedBy=="recent"){
+      recent_class = sort_class;
+    }else{
+      alltime_class = sort_class;
+    }
+    return (
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Name</th>
+          <th onClick={this.props.sortByLast30}>Points in last 30 days<i className={recent_class}/></th>
+          <th onClick={this.props.sortByAllTime}>All time points<i className={alltime_class}/></th>
+        </tr>
+      </thead>
+    );
+  }
+}
+
+class Board extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    let leaders = [];
+    for (let i = 0; i < this.props.leaders.length; ++i) {
+      const img_src = this.props.leaders[i]["img"];
+      const username = this.props.leaders[i]["username"];
+      const user_url = "https://freecodecamp.com/" + username;
+      const recent_points = this.props.leaders[i]["recent"];
+      const alltime_points = this.props.leaders[i]["alltime"];
+
+      const leader = (
+        <tr>
+          <td>{i + 1}</td>
+          <td>
+            <img src={img_src} alt="avatar" className="avatar" />
+            <a href={user_url} target="_blank">
+              {username}
+            </a>
+          </td>
+          <td>{recent_points}</td>
+          <td>{alltime_points}</td>
+        </tr>
+      );
+
+      leaders.push(leader);
+    }
+    return <tbody>{leaders}</tbody>;
+  }
+}
+
+class Leader extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <tr>
+        <td>{this.props.num}</td>
+        <td>NameCol</td>
+        <td>30 days points</td>
+        <td>All time points</td>
+      </tr>
+    );
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById("container"));
