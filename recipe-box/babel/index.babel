@@ -1,0 +1,244 @@
+const STOR_KEY = "_chintanpokhrel_recipes";
+
+class App extends React.Component {
+  constructor(props) {
+    super(props);
+    let arr = [];
+
+    this.handleOpenDialog = this.handleOpenDialog.bind(this);
+    this.handleSave = this.handleSave.bind(this);
+    this.handleClose = this.handleClose.bind(this);
+    this.curItemChanged = this.curItemChanged.bind(this);
+    this.curIngredsChanged = this.curIngredsChanged.bind(this);
+    this.handleEdit = this.handleEdit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+    this.storeRecipes = this.storeRecipes.bind(this);
+    this.getRecipesFromStorage = this.getRecipesFromStorage.bind(this);
+
+    arr = this.getRecipesFromStorage();
+
+    this.state = {
+      recipes: arr,
+      visibility: "hidden",
+      curItem: "",
+      curIngreds: "",
+      dialogTitle: "Add a Recipe"
+    };
+  }
+
+  storeRecipes(arr) {
+    console.log(JSON.stringify(arr));
+    console.log(arr);
+    if (typeof Storage !== "undefined") {
+      localStorage.setItem(STOR_KEY, JSON.stringify(arr));
+    }
+  }
+
+  getRecipesFromStorage() {
+    let arr = [];
+    if (typeof Storage !== "undefined") {
+      let data = localStorage.getItem(STOR_KEY);
+      if (!data) {
+        arr = [];
+      } else {
+        arr = JSON.parse(data);
+      }
+    }
+    return arr;
+  }
+
+  handleSave() {
+    //Allow user to add a recipe
+    let arr = this.state.recipes.concat();
+    //Find if the item is already in the list, if no, add, otherwise update
+    const pos = arr.findIndex(
+      el => el.item.toLowerCase() == this.state.curItem.toLowerCase()
+    );
+    if (pos == -1) {
+      arr.push({
+        item: this.state.curItem,
+        ingredients: this.state.curIngreds
+      });
+    } else {
+      arr[pos].ingredients = this.state.curIngreds;
+    }
+
+    //Save item in local storage
+    this.storeRecipes(arr);
+    console.log(arr);
+
+    this.setState({
+      visibility: "hidden",
+      recipes: arr
+    });
+  }
+
+  handleOpenDialog() {
+    this.setState({
+      visibility: "shown",
+      curItem: "",
+      curIngreds: ""
+    });
+  }
+
+  handleClose() {
+    this.setState({
+      visibility: "hidden"
+    });
+  }
+
+  curItemChanged(evt) {
+    this.setState({
+      curItem: evt.target.value
+    });
+  }
+
+  curIngredsChanged(evt) {
+    this.setState({
+      curIngreds: evt.target.value
+    });
+  }
+
+  handleEdit(recipe) {
+    this.setState({
+      visibility: "shown",
+      curItem: recipe.item,
+      curIngreds: recipe.ingredients
+    });
+  }
+
+  handleDelete(recipe) {
+    const pos = this.state.recipes.findIndex(
+      el => el.item.toLowerCase() == recipe.item.toLowerCase()
+    );
+
+    let arr = this.state.recipes.concat();
+    arr.splice(pos, 1);
+
+    this.storeRecipes(arr);
+
+    this.setState({
+      visibility: "hidden",
+      recipes: arr
+    });
+  }
+
+  render() {
+    return (
+      <div>
+        <Recipes
+          recipes={this.state.recipes}
+          handleEdit={this.handleEdit}
+          handleDelete={this.handleDelete}
+        />
+        <button onClick={this.handleOpenDialog}>Add Recipe</button>
+        <AddDialog
+          visibility={this.state.visibility}
+          handleSave={this.handleSave}
+          handleClose={this.handleClose}
+          curItemChanged={this.curItemChanged}
+          curIngredsChanged={this.curIngredsChanged}
+          curItem={this.state.curItem}
+          curIngreds={this.state.curIngreds}
+          dialogTitle={this.state.dialogTitle}
+        />
+      </div>
+    );
+  }
+}
+
+class Recipes extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    let recipes = [];
+    for (let i = 0; i < this.props.recipes.length; ++i) {
+      const item = this.props.recipes[i].item;
+      const ingredients = this.props.recipes[i].ingredients;
+      recipes.push(
+        <Recipe
+          item={item}
+          ingredients={ingredients}
+          handleEdit={this.props.handleEdit}
+          handleDelete={this.props.handleDelete}
+        />
+      );
+    }
+    return <div>{recipes}</div>;
+  }
+}
+
+class Recipe extends React.Component {
+  constructor(props) {
+    super(props);
+    this.handleEdit = this.handleEdit.bind(this);
+    this.handleDelete = this.handleDelete.bind(this);
+  }
+
+  handleEdit() {
+    this.props.handleEdit({
+      item: this.props.item,
+      ingredients: this.props.ingredients
+    });
+  }
+
+  handleDelete() {
+    this.props.handleDelete({
+      item: this.props.item,
+      ingredients: this.props.ingredients
+    });
+  }
+
+  render() {
+    const ingredList = this.props.ingredients.split(",");
+    let ingredJSX = [];
+    for (let i = 0; i < ingredList.length; ++i) {
+      ingredJSX.push(<p key={i}>{ingredList[i]}</p>);
+    }
+    return (
+      <div>
+        <div>
+          <h3>{this.props.item}</h3>
+          {ingredJSX}
+        </div>
+        <button onClick={this.handleEdit}>Edit</button>
+        <button onClick={this.handleDelete}>Delete</button>
+      </div>
+    );
+  }
+}
+
+class AddDialog extends React.Component {
+  constructor(props) {
+    super(props);
+  }
+
+  render() {
+    return (
+      <div className={this.props.visibility}>
+        <h4>{this.props.dialogTitle}</h4>
+        <label for="recipe_name" />
+        <input
+          type="text"
+          id="recipe_name"
+          placeholder="Recipe Name"
+          onChange={this.props.curItemChanged}
+          value={this.props.curItem}
+        />
+        <label for="ingredients" />
+        <textarea
+          id="ingredients"
+          placeholder="Enter, ingredients, separated, by, commas"
+          onChange={this.props.curIngredsChanged}
+          value={this.props.curIngreds}
+        />
+        <button onClick={this.props.handleSave}>Save</button>
+        <button onClick={this.props.handleClose}>Close</button>
+      </div>
+    );
+  }
+}
+
+ReactDOM.render(<App />, document.getElementById("container"));
