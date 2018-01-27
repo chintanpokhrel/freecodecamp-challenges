@@ -1,7 +1,113 @@
-.hidden{
+.hidden {
   display: none;
 }
 
-.shown{
+.shown {
   display: block;
+}
+
+/*Edit dialog as modal*/
+/*CSS modified from available at w3schools */
+
+/* The Modal (background) */
+.dialog {
+  display: none; /* Hidden by default */
+  position: fixed; /* Stay in place */
+  z-index: 1; /* Sit on top */
+  left: 0;
+  top: 0;
+  width: 100%; /* Full width */
+  height: 100%; /* Full height */
+  overflow: auto; /* Enable scroll if needed */
+  background-color: rgb(0, 0, 0); /* Fallback color */
+  background-color: rgba(0, 0, 0, 0.4); /* Black w/ opacity */
+}
+
+/* Modal Content/Box */
+.dialog-content {
+  background-color: #fefefe;
+  margin: 15% auto; /* 15% from the top and centered */
+  padding: 20px;
+  border: 1px solid #888;
+  width: 60%; /* Could be more or less, depending on screen size */
+}
+
+/* The Close Button */
+.close {
+  color: #aaa;
+  float: right;
+  font-size: 28px;
+  font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+  color: black;
+  text-decoration: none;
+  cursor: pointer;
+}
+
+/*Modal specific styling end*/
+
+.dialog-content {
+  border: 5px solid black;
+  div {
+    width: 100%;
+    #ingredients {
+      width: 90%;
+      height: 30px;
+      max-width: 600px;
+    }
+    #recipe_name {
+      width: 90%;
+      max-width: 100%;
+    }
+  }
+}
+
+#container {
+  max-width: 600px;
+  width: 100%;
+  background-color: #f1f1f1;
+  padding: 10px;
+  border: 2px solid red;
+}
+
+.recipe {
+  background-color: blueviolet;
+  border-radius: 10px;
+  padding: 3px;
+  margin: 5px;
+  color: white;
+  width: 90%;
+  h3 {
+    color: darkred;
+    padding-left: 10px;
+  }
+  .item-detail {
+    background: darkmagenta;
+    padding: 10px;
+    border-radius: 5px;
+    button {
+      margin: 3px; 
+    }
+
+    h4{
+      text-align: center;
+    }
+  }
+
+  h3:hover {
+    text-decoration: underline;
+    cursor: pointer;
+  }
+
+  &:hover {
+    background-color: black;
+  }
+}
+
+.add-recipe {
+  padding: 5px;
+  margin: 10px;
 }

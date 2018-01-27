@@ -6,7 +6,36 @@ function _possibleConstructorReturn(self, call) { if (!self) { throw new Referen
 
 function _inherits(subClass, superClass) { if (typeof superClass !== "function" && superClass !== null) { throw new TypeError("Super expression must either be null or a function, not " + typeof superClass); } subClass.prototype = Object.create(superClass && superClass.prototype, { constructor: { value: subClass, enumerable: false, writable: true, configurable: true } }); if (superClass) Object.setPrototypeOf ? Object.setPrototypeOf(subClass, superClass) : subClass.__proto__ = superClass; }
 
+/*Local Storage handling */
 var STOR_KEY = "_chintanpokhrel_recipes";
+var getRecipesFromStorage = function getRecipesFromStorage() {
+  var arr = [];
+  if (typeof Storage !== "undefined") {
+    var data = localStorage.getItem(STOR_KEY);
+    arr = data && JSON.parse(data);
+    if (!arr) {
+      arr = [];
+    }
+  }
+  return arr;
+};
+
+var storeRecipes = function storeRecipes(arr) {
+  if (typeof Storage !== "undefined") {
+    localStorage.setItem(STOR_KEY, JSON.stringify(arr));
+  }
+};
+/*Local Storage handling end*/
+
+/*React Components*/
+/********************************
+1. App - top level component, stateful
+2. Recipes - stateless
+        ----- Recipe - stateless
+3. AddDialog - dialog to add new recipe/update existing one - stateless
+********************************/
+
+/*top level stateful component */
 
 var App = function (_React$Component) {
   _inherits(App, _React$Component);
@@ -25,14 +54,12 @@ var App = function (_React$Component) {
     _this.curIngredsChanged = _this.curIngredsChanged.bind(_this);
     _this.handleEdit = _this.handleEdit.bind(_this);
     _this.handleDelete = _this.handleDelete.bind(_this);
-    _this.storeRecipes = _this.storeRecipes.bind(_this);
-    _this.getRecipesFromStorage = _this.getRecipesFromStorage.bind(_this);
 
-    arr = _this.getRecipesFromStorage();
+    arr = getRecipesFromStorage();
 
     _this.state = {
       recipes: arr,
-      visibility: "hidden",
+      visibility: "",
       curItem: "",
       curIngreds: "",
       dialogTitle: "Add a Recipe"
@@ -41,29 +68,6 @@ var App = function (_React$Component) {
   }
 
   _createClass(App, [{
-    key: "storeRecipes",
-    value: function storeRecipes(arr) {
-      console.log(JSON.stringify(arr));
-      console.log(arr);
-      if (typeof Storage !== "undefined") {
-        localStorage.setItem(STOR_KEY, JSON.stringify(arr));
-      }
-    }
-  }, {
-    key: "getRecipesFromStorage",
-    value: function getRecipesFromStorage() {
-      var arr = [];
-      if (typeof Storage !== "undefined") {
-        var data = localStorage.getItem(STOR_KEY);
-        if (!data) {
-          arr = [];
-        } else {
-          arr = JSON.parse(data);
-        }
-      }
-      return arr;
-    }
-  }, {
     key: "handleSave",
     value: function handleSave() {
       var _this2 = this;
@@ -84,29 +88,32 @@ var App = function (_React$Component) {
       }
 
       //Save item in local storage
-      this.storeRecipes(arr);
-      console.log(arr);
+      storeRecipes(arr);
 
       this.setState({
-        visibility: "hidden",
+        //visibility: "hidden",
         recipes: arr
       });
+      closeDialog();
     }
   }, {
     key: "handleOpenDialog",
     value: function handleOpenDialog() {
       this.setState({
-        visibility: "shown",
+        //visibility: "shown",
         curItem: "",
         curIngreds: ""
       });
+      openDialog();
     }
   }, {
     key: "handleClose",
     value: function handleClose() {
+      closeDialog();
+      /*
       this.setState({
         visibility: "hidden"
-      });
+      });*/
     }
   }, {
     key: "curItemChanged",
@@ -126,10 +133,11 @@ var App = function (_React$Component) {
     key: "handleEdit",
     value: function handleEdit(recipe) {
       this.setState({
-        visibility: "shown",
+        //visibility: "shown",
         curItem: recipe.item,
         curIngreds: recipe.ingredients
       });
+      openDialog();
     }
   }, {
     key: "handleDelete",
@@ -141,12 +149,13 @@ var App = function (_React$Component) {
       var arr = this.state.recipes.concat();
       arr.splice(pos, 1);
 
-      this.storeRecipes(arr);
+      storeRecipes(arr);
 
       this.setState({
-        visibility: "hidden",
+        //visibility: "hidden",
         recipes: arr
       });
+      closeDialog();
     }
   }, {
     key: "render",
@@ -161,7 +170,7 @@ var App = function (_React$Component) {
         }),
         React.createElement(
           "button",
-          { onClick: this.handleOpenDialog },
+          { onClick: this.handleOpenDialog, className: "add-recipe" },
           "Add Recipe"
         ),
         React.createElement(AddDialog, {
@@ -251,33 +260,42 @@ var Recipe = function (_React$Component3) {
       var ingredJSX = [];
       for (var i = 0; i < ingredList.length; ++i) {
         ingredJSX.push(React.createElement(
-          "p",
+          "li",
           { key: i },
           ingredList[i]
         ));
       }
       return React.createElement(
         "div",
-        null,
+        { className: "recipe" },
+        React.createElement(
+          "h3",
+          { onClick: handleRecipeClick },
+          this.props.item
+        ),
         React.createElement(
           "div",
-          null,
+          { className: "item-detail hidden" },
           React.createElement(
-            "h3",
+            "h4",
             null,
-            this.props.item
+            "Ingredients"
           ),
-          ingredJSX
-        ),
-        React.createElement(
-          "button",
-          { onClick: this.handleEdit },
-          "Edit"
-        ),
-        React.createElement(
-          "button",
-          { onClick: this.handleDelete },
-          "Delete"
+          React.createElement(
+            "ul",
+            null,
+            ingredJSX
+          ),
+          React.createElement(
+            "button",
+            { onClick: this.handleEdit },
+            "Edit"
+          ),
+          React.createElement(
+            "button",
+            { onClick: this.handleDelete },
+            "Delete"
+          )
         )
       );
     }
@@ -300,36 +318,61 @@ var AddDialog = function (_React$Component4) {
     value: function render() {
       return React.createElement(
         "div",
-        { className: this.props.visibility },
+        { className: "dialog", id: "dialog" },
         React.createElement(
-          "h4",
-          null,
-          this.props.dialogTitle
-        ),
-        React.createElement("label", { "for": "recipe_name" }),
-        React.createElement("input", {
-          type: "text",
-          id: "recipe_name",
-          placeholder: "Recipe Name",
-          onChange: this.props.curItemChanged,
-          value: this.props.curItem
-        }),
-        React.createElement("label", { "for": "ingredients" }),
-        React.createElement("textarea", {
-          id: "ingredients",
-          placeholder: "Enter, ingredients, separated, by, commas",
-          onChange: this.props.curIngredsChanged,
-          value: this.props.curIngreds
-        }),
-        React.createElement(
-          "button",
-          { onClick: this.props.handleSave },
-          "Save"
-        ),
-        React.createElement(
-          "button",
-          { onClick: this.props.handleClose },
-          "Close"
+          "div",
+          { className: "dialog-content" },
+          React.createElement(
+            "span",
+            { className: "close", id: "btn-close" },
+            "\xD7"
+          ),
+          React.createElement(
+            "h4",
+            null,
+            this.props.dialogTitle
+          ),
+          React.createElement(
+            "div",
+            null,
+            React.createElement(
+              "label",
+              { "for": "recipe_name" },
+              "Name"
+            ),
+            React.createElement("input", {
+              type: "text",
+              id: "recipe_name",
+              placeholder: "Recipe Name",
+              onChange: this.props.curItemChanged,
+              value: this.props.curItem
+            })
+          ),
+          React.createElement(
+            "div",
+            null,
+            React.createElement(
+              "label",
+              { "for": "ingredients" },
+              "Ingredients"
+            ),
+            React.createElement("input", {
+              type: "text",
+              id: "ingredients",
+              placeholder: "Ingredients, separated, by, commas",
+              onChange: this.props.curIngredsChanged,
+              value: this.props.curIngreds
+            })
+          ),
+          React.createElement(
+            "div",
+            null,
+            React.createElement(
+              "button",
+              { onClick: this.props.handleSave, id: "btn-save" },
+              "Save"
+            )
+          )
         )
       );
     }
@@ -339,3 +382,37 @@ var AddDialog = function (_React$Component4) {
 }(React.Component);
 
 ReactDOM.render(React.createElement(App, null), document.getElementById("container"));
+
+/*Styling*/
+function handleRecipeClick(event) {
+  event.target.nextSibling.classList.toggle("hidden");
+  var recipeDetail = document.querySelectorAll(".item-detail");
+  for (var i = 0; i < recipeDetail.length; ++i) {
+    if (event.target.nextSibling !== recipeDetail[i]) {
+      recipeDetail[i].classList.add("hidden");
+    }
+  }
+}
+
+/*dialog handling*/
+function closeDialog() {
+  document.getElementById("dialog").style.display = "none";
+}
+
+function openDialog() {
+  document.getElementById("dialog").style.display = "block";
+}
+
+document.getElementById("btn-close").onclick = function () {
+  closeDialog();
+};
+
+// When the user clicks anywhere outside of the modal, close it
+window.addEventListener("click", function (event) {
+  if (event.target == document.getElementById("dialog")) {
+    closeDialog();
+  }
+});
+
+/*dialog handling end*/
+/*Styling end*/
