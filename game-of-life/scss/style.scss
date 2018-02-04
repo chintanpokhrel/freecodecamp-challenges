@@ -1,0 +1,29 @@
+.alive{
+  background-color: green;
+}
+
+.dead{
+  background-color: black;
+}
+
+table{
+  tr{
+    td{
+      width: 10px;
+      height: 10px;
+    }
+  }
+}
+
+span{
+  border: 2px solid black;
+  &.board-size{
+    background-color: gray;
+    padding: 5px;
+  }
+  
+  &.speed{
+    background-color: green;
+    padding: 5px;
+  }
+}
