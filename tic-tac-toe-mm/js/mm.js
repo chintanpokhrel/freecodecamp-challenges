@@ -109,7 +109,7 @@ function isDraw(state){
 	//draw
 	let i = 0;
 	for(; i<state.length; ++i){
-		if(state[i] != 'X' || state[i] != 'O'){
+		if(state[i] != 'X' && state[i] != 'O'){
 			break;
 		}
 	}

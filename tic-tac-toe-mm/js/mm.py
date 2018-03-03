@@ -4,14 +4,17 @@ def minimax_decision(state):
 	act = actions(state)
 	max_val = -1000
 	max_val_act = -1
-	print act	
+	#print act	
 
 	for a in act:
 		val_a = min_value(result(state[:], a, 'X'))
 		#print result(state[:], a, 'X')
 		max_val_act = max_val_act if max_val>val_a else a
 		max_val = max_val if max_val > val_a else val_a
-		#print a, val_a
+		#print a, val_a, max_val, max_val_act
+		#if a == 3:
+			#print result(state[:], a, 'X')
+
 	
 	return max_val_act
 
@@ -25,7 +28,6 @@ def max_value(state):
 	for a in act:
 		v_tmp = min_value(result(state[:], a, 'X'))
 		v = v if v>v_tmp else v_tmp
-
 	return v
 
 
@@ -38,7 +40,6 @@ def min_value(state):
 	for a in act:
 		v_tmp = max_value(result(state[:], a, 'O'))
 		v = v if v<v_tmp else v_tmp
-
 	return v
 
 
@@ -96,7 +97,7 @@ def is_draw(state):
 	
 	i = 0
 	while i<len(state):
-		if(state[i] != 'X'  or  state[i] != 'O'):
+		if(state[i] != 'X'  and  state[i] != 'O'):
 			break
 		i = i+1
 		
